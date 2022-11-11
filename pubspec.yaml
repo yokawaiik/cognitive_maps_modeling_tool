@@ -37,6 +37,7 @@ dependencies:
   get: ^5.0.0-beta.52
   flutter_material_pickers: ^3.3.0
   fl_chart: ^0.55.2
+  uuid: ^3.0.6
 
 
   # The following adds the Cupertino Icons font to your application.
