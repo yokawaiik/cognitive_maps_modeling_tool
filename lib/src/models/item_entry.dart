@@ -3,7 +3,6 @@ class ItemEntry {
   List<int> positions = [];
 
   ItemEntry(
-    this.title, [
-    this.positions = const [],
-  ]);
+    this.title,
+  );
 }
