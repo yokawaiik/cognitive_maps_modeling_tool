@@ -12,47 +12,64 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Dynamic calculation"),
-          actions: [
-            PopupMenuButton(
-              icon: Icon(Icons.menu),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  // todo:Save to file
-                  onTap: () => {},
-                  child: ListTile(
-                    leading: Icon(Icons.save),
-                    title: Text("Save to file"),
+      child: Obx(
+        () => WillPopScope(
+          onWillPop: controller.closeMapEditor,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Dynamic calculation"),
+                  Text(
+                    'Choosed map: ${controller.CMEC.fileMapModel.value.name}',
+                    style: textTheme.bodySmall,
                   ),
+                ],
+              ),
+              actions: [
+                PopupMenuButton(
+                  icon: Icon(Icons.menu),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: controller.saveToFile,
+                      child: ListTile(
+                        leading: Icon(Icons.save),
+                        title: Text("Save to file"),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-          bottom: TabBar(
-            indicatorColor: colorScheme.primary,
-            labelColor: colorScheme.primary,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.grid_3x3),
-                text: "Map editor",
+              bottom: TabBar(
+                controller: controller.tabController,
+                indicatorColor: colorScheme.primary,
+                labelColor: colorScheme.primary,
+                onTap: controller.onTap,
+                tabs: [
+                  Tab(
+                    icon: Icon(Icons.grid_3x3),
+                    text: "Map editor",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.show_chart),
+                    text: "Analysis",
+                  ),
+                ],
               ),
-              Tab(
-                icon: Icon(Icons.show_chart),
-                text: "Analysis",
-              ),
-            ],
+            ),
+            body: TabBarView(
+              controller: controller.tabController,
+              children: [
+                TabMapEditor(),
+                TabAnalysis(),
+              ],
+            ),
           ),
-        ),
-        body: TabBarView(
-          children: [
-            TabMapEditor(),
-            TabAnalysis(),
-          ],
         ),
       ),
     );

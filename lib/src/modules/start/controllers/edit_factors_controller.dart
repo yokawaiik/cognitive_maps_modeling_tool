@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get/get.dart';
+import 'package:mdmwcm_app/src/models/file_map_model.dart';
+import 'package:mdmwcm_app/src/models/home_page_arguments.dart';
+import 'package:mdmwcm_app/src/modules/home/pages/home_page.dart';
 
 import '../../../models/item_entry.dart';
 
@@ -41,12 +44,14 @@ class EditFactorsController extends GetxController {
 
   void _setTextFieldsForFactors() {
     if (factorsCount.value > textFieldControllers.length) {
-      for (var i = 0; i < factorsCount.value; i++) {
+      for (var i = textFieldControllers.length; i < factorsCount.value; i++) {
         textFieldControllers.add(
           TextEditingController(),
         );
       }
     } else {
+      print(
+          'remove since ${factorsCount.value} to ${textFieldControllers.length}');
       textFieldControllers.removeRange(
         factorsCount.value,
         textFieldControllers.length,
@@ -64,6 +69,9 @@ class EditFactorsController extends GetxController {
   }
 
   void removeLastTextFieldController() {
+    if (factorsCount.value < 3) {
+      return;
+    }
     factorsCount.value--;
     textFieldControllers.removeLast();
     textFieldControllers.refresh();
@@ -116,7 +124,21 @@ Factors can't be duplicated.
       return;
     }
 
-    // next
+    var handledFactors =
+        textFieldControllers.map((element) => element.text).toList();
+
+    final homePageArguments = HomePageArguments(
+      fileMapModel: FileMapModel.onlyEditor(
+        name: mapNameTFC.text,
+        factorList: handledFactors,
+        matrixW: [],
+      ),
+    );
+
+    Get.offAndToNamed(
+      HomePage.routeName,
+      arguments: homePageArguments,
+    );
   }
 
   void simpleCheckFactorsForm() {
@@ -127,7 +149,5 @@ Factors can't be duplicated.
     } else {
       isTextFieldsValid.value = false;
     }
-    // print(
-    //     'simpleCheckFactorsForm - isTextFieldsValid.value : ${isTextFieldsValid.value}');
   }
 }

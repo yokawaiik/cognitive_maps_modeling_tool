@@ -1,15 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:mdmwcm_app/src/models/time_series_data_model.dart';
+import 'package:mdmwcm_app/src/modules/home/controllers/analysis_controller.dart';
 
-class DynamicsChartWidget extends StatelessWidget {
+class DynamicsChartWidget extends GetView<AnalysisController> {
   final double height;
-
-  List<TimeSeriesDataModel> timeSeriesDataModelList;
 
   DynamicsChartWidget({
     super.key,
-    required this.timeSeriesDataModelList,
     this.height = 500,
   });
 
@@ -38,7 +37,7 @@ class DynamicsChartWidget extends StatelessWidget {
   Widget _graph() {
     List<LineChartBarData> lineBarsData = [];
 
-    for (var timeSeries in timeSeriesDataModelList) {
+    for (var timeSeries in controller.timeSeriesList) {
       lineBarsData.add(
         _convertTimeSeriesToLine(
           _convertTimeSeriesToFlSpot(timeSeries.dataList),
@@ -57,48 +56,65 @@ class DynamicsChartWidget extends StatelessWidget {
         gridData: FlGridData(show: false), // grid
       ),
 
-      swapAnimationDuration: Duration(milliseconds: 150), // Optional
+      swapAnimationDuration: const Duration(milliseconds: 150), // Optional
       swapAnimationCurve: Curves.linear, // Optional
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: height,
-            child: _graph(),
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            itemCount: timeSeriesDataModelList.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300,
-              childAspectRatio: 6,
-              crossAxisSpacing: 16,
-            ),
-            itemBuilder: (context, index) => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  color: timeSeriesDataModelList[index].color,
-                  height: 24,
-                  width: 24,
+    print('DynamicsChartWidget - rebuilt');
+    return Obx(
+      () => Padding(
+        key: key,
+        padding: const EdgeInsets.all(16),
+        child: controller.timeSeriesList.isEmpty
+            ? SizedBox(
+                height: height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Center(
+                      child: Text("There is no data..."),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: 24,
-                ),
-                Text(
-                  timeSeriesDataModelList[index].title,
-                ),
-              ],
-            ),
-          ),
-        ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: height,
+                    child: _graph(),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.timeSeriesList.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      childAspectRatio: 6,
+                      crossAxisSpacing: 16,
+                    ),
+                    itemBuilder: (context, index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          color: controller.timeSeriesList[index].color,
+                          height: 24,
+                          width: 24,
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        Text(
+                          controller.timeSeriesList[index].title,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

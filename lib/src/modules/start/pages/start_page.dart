@@ -31,7 +31,7 @@ class StartPage extends GetView<StartController> {
                 ),
                 onPressed: controller.setFactors,
                 child: Text(
-                  'Set factors',
+                  'Create a new map',
                   style: TextStyle(fontSize: 24),
                 ),
               ),

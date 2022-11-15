@@ -32,4 +32,9 @@ class TimeSeriesDataModel {
 
     return randomColor;
   }
+
+  @override
+  String toString() {
+    return 'title : $title ; dataList : ${dataList.join(', ')}.';
+  }
 }

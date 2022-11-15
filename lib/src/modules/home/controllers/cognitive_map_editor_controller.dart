@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mdmwcm_app/src/models/file_map_model.dart';
+import 'package:mdmwcm_app/src/models/home_page_arguments.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../../utils/pluto_row_list_to_list.dart';
@@ -15,106 +22,28 @@ class CognitiveMapEditorController extends GetxController {
 
   final rows = RxList<PlutoRow>([]);
 
+  late Rx<FileMapModel> fileMapModel;
+
   @override
   void onInit() {
-    super.onInit();
+    final homePageArguments = Get.arguments as HomePageArguments?;
 
-    columns.addAll([
-      PlutoColumn(
-        title: 'Factor',
-        field: 'sytem_column_title',
-        type: PlutoColumnType.text(),
-        enableRowDrag: true,
-        enableEditingMode: true,
-        enableSorting: false,
-        enableColumnDrag: false,
-        enableFilterMenuItem: false,
-      ),
-      PlutoColumn(
-        title: 'column1',
-        field: 'column1',
-        type: PlutoColumnType.number(format: '#.###'),
-        enableEditingMode: true,
-        enableSorting: false,
-        enableFilterMenuItem: false,
-      ),
-      PlutoColumn(
-        title: 'column2',
-        field: 'column2',
-        type: PlutoColumnType.number(format: '#.###'),
-        enableEditingMode: true,
-        enableSorting: false,
-        enableFilterMenuItem: false,
-      ),
-      PlutoColumn(
-        title: 'column3',
-        field: 'column3',
-        type: PlutoColumnType.number(format: '#.###'),
-        enableEditingMode: true,
-        enableSorting: false,
-        enableFilterMenuItem: false,
-      ),
-      PlutoColumn(
-        title: 'column4',
-        field: 'column4',
-        type: PlutoColumnType.number(format: '#.###'),
-        enableEditingMode: true,
-        enableSorting: false,
-        enableFilterMenuItem: false,
-      ),
-    ]);
+    if (homePageArguments == null) {
+      Get.back();
+    }
 
-    rows.addAll(
-      [
-        PlutoRow(
-          cells: {
-            'sytem_column_title': PlutoCell(value: "row1"),
-            'column1': PlutoCell(value: 0),
-            'column2': PlutoCell(value: 2),
-            'column3': PlutoCell(value: 0),
-            'column4': PlutoCell(value: 1),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'sytem_column_title': PlutoCell(value: "row2"),
-            'column1': PlutoCell(value: -2),
-            'column2': PlutoCell(value: 0),
-            'column3': PlutoCell(value: 12),
-            'column4': PlutoCell(value: 7),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'sytem_column_title': PlutoCell(value: "row3"),
-            'column1': PlutoCell(value: 0),
-            'column2': PlutoCell(value: -1),
-            'column3': PlutoCell(value: 0),
-            'column4': PlutoCell(value: -3),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'sytem_column_title': PlutoCell(value: "row4"),
-            'column1': PlutoCell(value: 2),
-            'column2': PlutoCell(value: 1.1),
-            'column3': PlutoCell(value: 2),
-            'column4': PlutoCell(value: 0),
-          },
-        ),
-      ],
-    );
+    // createCognitiveMap
+    fileMapModel = Rx(homePageArguments!.fileMapModel);
 
-    stateManager = PlutoGridStateManager(
-      columns: columns,
-      gridFocusNode: FocusNode(),
-      rows: rows,
-      scroll: PlutoGridScrollController(),
+    createCognitiveMap(
+      isNew: homePageArguments.isNew,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       stateManager?.setSelectingMode(gridSelectingMode);
     });
+
+    super.onInit();
   }
 
   void plutoGridOnLoaded(PlutoGridOnLoadedEvent event) {
@@ -127,18 +56,59 @@ class CognitiveMapEditorController extends GetxController {
     stateManager?.notifyListeners();
   }
 
-  // todo: setFactors
-  void setFactors() {}
+  // todo: editFactors
+  // void editFactors() {
 
-// todo: handlerInputMatrix
-  void handlerInputMatrix() {}
+  // }
 
-  // todo: saveToFile
-  void saveToFile() {
-    print("__saveToFile__");
-    final values = plutoRowListToList(stateManager!.refRows);
-    print(values);
-    print("__saveToFile__");
+  void saveToFile() async {
+    try {
+      print("__saveToFile__");
+      final values = plutoRowListToList(stateManager!.rows);
+      final factorsName = stateManager!.columns.map((e) => e.title).toList()
+        ..removeAt(0);
+
+      final fileMap = FileMapModel.onlyEditor(
+        name: fileMapModel.value.name,
+        factorList: factorsName,
+        matrixW: values,
+      );
+
+      final fs = FileSaver.instance;
+
+      if (GetPlatform.isAndroid) {
+        await fs.saveAs(
+          fileMap.name,
+          fileMap.convertModelToUint8List(),
+          'json',
+          MimeType.JSON,
+        );
+      } else if (GetPlatform.isWindows) {
+        String? outputFile = await FilePicker.platform.saveFile(
+          dialogTitle: 'Save Your File to desired location',
+          fileName: '${fileMap.name}.json',
+        );
+
+        if (outputFile == null) {
+          return;
+        }
+
+        File returnedFile = File('$outputFile');
+        await returnedFile.writeAsBytes(fileMap.convertModelToUint8List());
+      } else {
+        await fs.saveFile(
+          fileMap.name,
+          fileMap.convertModelToUint8List(),
+          'json',
+          mimeType: MimeType.JSON,
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('CognitiveMapEditorController - saveToFile - e : $e.');
+      }
+      Get.snackbar("Unexpectedly exception", "Something went wrong.");
+    }
   }
 
   void setGridSelectingMode(PlutoGridSelectingMode? mode) {
@@ -153,15 +123,14 @@ class CognitiveMapEditorController extends GetxController {
   int addCount = 1;
 
   void handlerAddRows(String title) {
-    final newRows = stateManager!.getNewRows(count: addCount);
+    final newRow = stateManager!.getNewRow();
 
-    // !!!!f
-    newRows.first.cells.values.first.value = title;
+    newRow.cells.values.first.value = title;
 
-    stateManager!.appendRows(newRows);
+    stateManager!.appendRows([newRow]);
 
     stateManager?.setCurrentCell(
-      newRows.first.cells.entries.first.value,
+      newRow.cells.entries.first.value,
       stateManager!.refRows.length - 1,
     );
 
@@ -189,7 +158,8 @@ class CognitiveMapEditorController extends GetxController {
     newColumns.add(newColumn);
 
     stateManager!.insertColumns(
-      stateManager!.bodyColumns.length,
+      // stateManager!.bodyColumns.length,
+      stateManager!.bodyColumns.length + 1,
       newColumns,
     );
   }
@@ -205,7 +175,6 @@ class CognitiveMapEditorController extends GetxController {
           // mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextField(
-              onChanged: (value) {},
               controller: textFieldAddFactorController,
               decoration: InputDecoration(hintText: "Text Field in Dialog"),
             ),
@@ -252,6 +221,8 @@ class CognitiveMapEditorController extends GetxController {
     final title = textFieldAddFactorController.text;
     addColumnAndRow(title);
     Get.back(closeOverlays: true);
+
+    textFieldAddFactorController.clear();
   }
 
   void addColumnAndRow(String title) {
@@ -263,28 +234,9 @@ class CognitiveMapEditorController extends GetxController {
     Get.back(closeOverlays: true);
   }
 
+  // todo: handleSaveAll
   void handleSaveAll() {
     saveToFile();
-
-    // widget.stateManager.setShowLoading(true);
-
-    // Future.delayed(const Duration(milliseconds: 500), () {
-    //   for (var row in widget.stateManager.refRows) {
-    //     if (row.cells['status']!.value != 'saved') {
-    //       row.cells['status']!.value = 'saved';
-    //     }
-
-    //     if (row.cells['id']!.value == '') {
-    //       row.cells['id']!.value = 'guest';
-    //     }
-
-    //     if (row.cells['name']!.value == '') {
-    //       row.cells['name']!.value = 'anonymous';
-    //     }
-    //   }
-
-    //   widget.stateManager.setShowLoading(false);
-    // });
   }
 
   void handleRemoveCurrentColumnButton() {
@@ -303,5 +255,146 @@ class CognitiveMapEditorController extends GetxController {
 
   void handleRemoveSelectedRowsButton() {
     stateManager!.removeRows(stateManager!.currentSelectingRows);
+  }
+
+  void createCognitiveMap({
+    isNew = true,
+  }) {
+    List<PlutoColumn> newColumns = [];
+
+    final factorsSytemColumn = _generateSytemColumn(
+      "Factors",
+      PlutoColumnType.text(),
+      readOnly: true,
+      frozen: PlutoColumnFrozen.start,
+    );
+
+    newColumns.add(factorsSytemColumn);
+
+    for (var element in fileMapModel.value.factorList) {
+      final factorColumn = _generateSytemColumn(
+        element,
+        PlutoColumnType.number(defaultValue: 0),
+      );
+      newColumns.add(factorColumn);
+    }
+
+    columns.addAll(newColumns);
+    stateManager = PlutoGridStateManager(
+      columns: columns,
+      gridFocusNode: FocusNode(),
+      rows: rows,
+      scroll: PlutoGridScrollController(),
+    );
+
+    List<PlutoRow> newRows = [];
+
+    if (isNew == false) {
+      // todo: error
+      for (var i = 0; i < fileMapModel.value.factorList.length; i++) {
+        final newRow = _generateSytemRow(
+          fileMapModel.value.factorList[i],
+          data: fileMapModel.value.matrixW[i],
+        );
+        newRows.add(newRow);
+      }
+      rows.addAll(newRows);
+    } else {
+      for (var element in fileMapModel.value.factorList) {
+        final newRow = _generateSytemRow(element);
+        newRows.add(newRow);
+      }
+
+      rows.addAll(newRows);
+    }
+  }
+
+  PlutoColumn _generateSytemColumn(
+    String title,
+    PlutoColumnType plutoColumnType, {
+    bool readOnly = false,
+    PlutoColumnFrozen frozen = PlutoColumnFrozen.none,
+  }) {
+    final newColumnId = const Uuid().v4();
+
+    final newColumn = PlutoColumn(
+      title: title,
+      field: newColumnId,
+      type: plutoColumnType,
+      enableSorting: false,
+      enableFilterMenuItem: false,
+      enableEditingMode: true,
+      enableColumnDrag: false,
+      enableRowDrag: false,
+      readOnly: readOnly,
+      frozen: frozen,
+    );
+
+    return newColumn;
+  }
+
+  PlutoRow _generateSytemRow(String title, {List<double>? data}) {
+    final newRow = stateManager!.getNewRows(count: addCount).first;
+
+    newRow.cells.values.first.value = title;
+
+    if (data != null) {
+      for (var i = 1; i < newRow.cells.values.length; i++) {
+        newRow.cells.values.elementAt(i).value = data[i - 1];
+      }
+    }
+
+    return newRow;
+  }
+
+  void removeLastFactor() {
+    final lastColumn = stateManager!.columns.last;
+
+    if (lastColumn == null) {
+      return;
+    }
+
+    stateManager!.removeColumns([lastColumn]);
+
+    final lastRow = stateManager!.rows.last;
+
+    stateManager!.removeRows([lastRow]);
+  }
+
+  void handleRemoveCurrentFactor() {
+    final firstColumn = stateManager!.columns.first;
+
+    final currentColumnFactor = stateManager!.currentColumn;
+
+    if (currentColumnFactor == null) {
+      return;
+    }
+
+    final currentRowFactor = stateManager!.rows.firstWhere((element) =>
+        (element.cells.values.first.value as String) ==
+        currentColumnFactor.title);
+
+    if (currentColumnFactor.title == firstColumn.title) {
+      Get.snackbar("Error", "You can't delete this system column.");
+      return;
+    }
+    stateManager!.removeColumns([currentColumnFactor]);
+    stateManager!.removeRows([currentRowFactor]);
+  }
+
+  bool isGridValid() {
+    // if any cell is nullable
+    for (var row in rows) {
+      if (row.cells.values.any((element) => element.value == null) == true) {
+        return false;
+      }
+    }
+
+    // check if square
+    if (rows.length != columns.length - 1) {
+      return false;
+    }
+
+    return true;
   }
 }

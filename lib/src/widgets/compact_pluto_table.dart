@@ -7,11 +7,20 @@ class CompactPlutoTable extends StatelessWidget {
   final double height;
   Widget? header;
 
+  void Function(PlutoGridOnRowCheckedEvent)? onRowChecked;
+
+  final String isGridBlockedMessage;
+
+  final bool isGridBlocked;
+
   CompactPlutoTable({
     super.key,
     required this.stateManager,
     this.header,
     this.height = 400,
+    this.onRowChecked,
+    this.isGridBlocked = false,
+    this.isGridBlockedMessage = 'Grid is blocked',
   });
 
   @override
@@ -27,7 +36,9 @@ class CompactPlutoTable extends StatelessWidget {
           SingleChildScrollView(
             child: SizedBox(
               height: height,
-              child: stateManager.columns.isEmpty || stateManager.rows.isEmpty
+              child: isGridBlocked ||
+                      stateManager.columns.isEmpty ||
+                      stateManager.rows.isEmpty
                   ? Container(
                       height: double.infinity,
                       width: double.infinity,
@@ -38,12 +49,14 @@ class CompactPlutoTable extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "You didn't choose any factors.",
+                          isGridBlockedMessage,
+                          // "You didn't choose any factors.",
                           style: textTheme.headline5,
                         ),
                       ),
                     )
                   : PlutoGrid(
+                      key: UniqueKey(),
                       configuration: PlutoGridConfiguration(
                         style: PlutoGridStyleConfig(
                           enableGridBorderShadow: true,
@@ -57,7 +70,7 @@ class CompactPlutoTable extends StatelessWidget {
                       columns: stateManager.columns,
                       rows: stateManager.rows,
                       onChanged: (PlutoGridOnChangedEvent event) {
-                        print(event);
+                        // print(event);
 
                         // if (event.row.cells['status']!.value == 'saved') {
                         //   event.row.cells['status']!.value = 'edited';
@@ -68,6 +81,7 @@ class CompactPlutoTable extends StatelessWidget {
                       onLoaded: (PlutoGridOnLoadedEvent event) {
                         stateManager = event.stateManager;
                       },
+                      onRowChecked: onRowChecked,
                     ),
             ),
           ),

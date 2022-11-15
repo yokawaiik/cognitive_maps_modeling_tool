@@ -56,20 +56,30 @@ class _Header extends GetView<CognitiveMapEditorController> {
               label: const Text('Save all'),
             ),
             ElevatedButton.icon(
-              onPressed: controller.handleRemoveCurrentColumnButton,
-              icon: Icon(Icons.view_column_outlined),
-              label: const Text('Remove Current Column'),
-            ),
-            ElevatedButton.icon(
-              onPressed: controller.handleRemoveCurrentRowButton,
-              icon: Icon(Icons.table_rows_outlined),
-              label: const Text('Remove Current Row'),
-            ),
-            ElevatedButton.icon(
-              onPressed: controller.handleRemoveSelectedRowsButton,
+              onPressed: controller.removeLastFactor,
               icon: Icon(Icons.remove_circle),
-              label: const Text('Remove Selected Rows'),
+              label: const Text('Remove last factor'),
             ),
+            ElevatedButton.icon(
+              onPressed: controller.handleRemoveCurrentFactor,
+              icon: Icon(Icons.code_rounded),
+              label: const Text('Remove selected factor'),
+            ),
+            // ElevatedButton.icon(
+            //   onPressed: controller.handleRemoveCurrentColumnButton,
+            //   icon: Icon(Icons.view_column_outlined),
+            //   label: const Text('Remove Current Column'),
+            // ),
+            // ElevatedButton.icon(
+            //   onPressed: controller.handleRemoveCurrentRowButton,
+            //   icon: Icon(Icons.table_rows_outlined),
+            //   label: const Text('Remove Current Row'),
+            // ),
+            // ElevatedButton.icon(
+            //   onPressed: controller.handleRemoveSelectedRowsButton,
+            //   icon: Icon(Icons.remove_circle),
+            //   label: const Text('Remove Selected Rows'),
+            // ),
           ],
         ),
       ),

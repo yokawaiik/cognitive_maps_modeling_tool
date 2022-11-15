@@ -67,7 +67,7 @@ List<List<double>> dynamicsOfControlledFactors({
   double eps = 0, // error
 }) {
   for (var u in rawVectorU) {
-    if (u.length - 1 != periodCount) {
+    if (u.length != periodCount) {
       throw Exception("Period count and U matrix must be the same length.");
     }
   }
@@ -83,24 +83,23 @@ List<List<double>> dynamicsOfControlledFactors({
   // 1 Select matrix A and B from matrix W
   equations.Matrix<double> matrixA = _getMatrixA(w, managedFactorIndexes);
   equations.Matrix<double> matrixB = _getMatrixB(w, managedFactorIndexes);
-  // print('matrixA: $matrixA');
-  // print('matrixB: $matrixB');
+  print('matrixA: $matrixA');
+  print('matrixB: $matrixB');
 
   // 2 matrix S (timeSeriesList) calculation
 
   List<List<double>> timeSeriesList = []; // S
 
   timeSeriesList.add(rawVectorS);
+  final transposedVectorU = equations.RealMatrix.fromData(
+    rows: rawVectorU.length,
+    columns: rawVectorU.first.length,
+    data: rawVectorU,
+  ).transpose().toListOfList();
 
-  for (var t = 0; t < periodCount; t++) {
+  for (var t = 1; t < periodCount + 1; t++) {
     List<double> currentRawVectorS;
-
-    if (t < 1) {
-      currentRawVectorS = timeSeriesList[t];
-    } else {
-      currentRawVectorS = timeSeriesList[timeSeriesList.length - 1];
-    }
-
+    currentRawVectorS = timeSeriesList.last;
     final currentVectorS = equations.RealMatrix.fromData(
       rows: 1,
       columns: currentRawVectorS.length,
@@ -109,16 +108,17 @@ List<List<double>> dynamicsOfControlledFactors({
 
     final currentVectorU = equations.RealMatrix.fromData(
       rows: 1,
-      columns: rawVectorU[t].length,
-      data: [rawVectorU[t]],
+      columns: transposedVectorU.first.length,
+      data: [transposedVectorU[t - 1]],
     ).transpose();
 
+    // print('matrixA - $matrixA');
+    // print('matrixB - $matrixB');
+    // print('currentVectorS - $currentVectorS');
+    // print('currentVectorU - $currentVectorU');
     final multipliedAbyS = matrixA * currentVectorS;
-
     final multipliedBbyU = matrixB * currentVectorU;
-
     final nextS = (multipliedAbyS + multipliedBbyU).toList();
-
     timeSeriesList.add(nextS);
   }
 
@@ -129,6 +129,5 @@ List<List<double>> dynamicsOfControlledFactors({
     data: timeSeriesList,
   ).transpose().toListOfList();
 
-  // return timeSeriesList;
   return timeSeriesListTransposed;
 }

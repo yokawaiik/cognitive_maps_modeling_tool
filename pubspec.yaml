@@ -31,13 +31,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  pluto_grid: ^5.4.0
+  pluto_grid: ^5.4.1
   equations: ^4.1.0
   # get: ^4.6.5
   get: ^5.0.0-beta.52
   flutter_material_pickers: ^3.3.0
   fl_chart: ^0.55.2
   uuid: ^3.0.6
+  file_saver: ^0.1.1
+  file_picker: ^5.2.2
 
 
   # The following adds the Cupertino Icons font to your application.
