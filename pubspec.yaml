@@ -1,5 +1,5 @@
 name: mdmwcm_app
-description: A new Flutter project.
+description: 'Application for modeling cognitive maps.'
 publish_to: 'none' 
 version: 1.0.0+1
 environment:
