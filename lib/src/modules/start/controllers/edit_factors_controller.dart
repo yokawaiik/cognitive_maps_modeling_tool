@@ -4,9 +4,7 @@ import 'package:get/get.dart';
 import 'package:mdmwcm_app/src/models/file_map_model.dart';
 import 'package:mdmwcm_app/src/models/home_page_arguments.dart';
 import 'package:mdmwcm_app/src/modules/home/pages/home_page.dart';
-
 import '../../../models/item_entry.dart';
-
 import 'package:collection/collection.dart';
 
 class EditFactorsController extends GetxController {

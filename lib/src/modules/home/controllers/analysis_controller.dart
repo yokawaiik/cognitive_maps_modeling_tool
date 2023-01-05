@@ -3,33 +3,26 @@ import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get/get.dart';
 import 'package:mdmwcm_app/src/modules/home/controllers/cognitive_map_editor_controller.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../models/time_series_data_model.dart';
 import '../../../utils/dynamics_of_controlled_factors.dart';
 import '../../../utils/pluto_row_list_to_list.dart';
 
 class AnalysisController extends GetxController {
   final CMEC = Get.find<CognitiveMapEditorController>();
-
   PlutoGridStateManager? matrixWstateManager;
-  // final matrixWcolumns = RxList<PlutoColumn>([]);
-  // final matrixWrows = RxList<PlutoRow>([]);
-
   // ? info: vector S
   PlutoGridStateManager? vectorSstateManager;
   final vectorScolumns = RxList<PlutoColumn>([]);
   final vectorSrows = RxList<PlutoRow>([]);
-
   // ? info: vector U
   PlutoGridStateManager? vectorUstateManager;
   final vectorUcolumns = RxList<PlutoColumn>([]);
   final vectorUrows = RxList<PlutoRow>([]);
-
   var isVectorGridsBlocked = RxBool(true);
-
   // ? info: t - periods
   var periods = RxInt(2);
-
+  List<String> _factorTitleRows = [];
+  var timeSeriesList = <TimeSeriesDataModel>[].obs;
   @override
   void onInit() {
     _initMatrixW();
@@ -50,7 +43,6 @@ class AnalysisController extends GetxController {
     );
   }
 
-  List<String> _factorTitleRows = [];
   void _initVectorSGrid() {
     vectorSstateManager = PlutoGridStateManager(
       // columns: vectorScolumns,
@@ -269,8 +261,6 @@ class AnalysisController extends GetxController {
 
     _buildChart(result, _factorTitleRows);
   }
-
-  var timeSeriesList = <TimeSeriesDataModel>[].obs;
 
   void _buildChart(
     List<List<double>> chartLines,

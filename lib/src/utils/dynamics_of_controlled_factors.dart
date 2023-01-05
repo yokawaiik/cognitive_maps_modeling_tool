@@ -5,7 +5,8 @@ equations.Matrix<double> _selection(
   List<List<double>> source,
   List<int> rowIndexes,
   List<int> columnIndexes,
-) {
+) //
+{
   final rawMatrix = rowIndexes
       .mapIndexed((y, valueY) => columnIndexes
           .mapIndexed((x, valueX) => source[valueY][valueX])
@@ -22,7 +23,8 @@ equations.Matrix<double> _selection(
 List<int> _otherIndexes(
   List<int> indexes,
   int matrixLength,
-) {
+) //
+{
   return List.generate(matrixLength, (int index) => index, growable: false)
       .where((value) => !indexes.contains(value))
       .toList();
@@ -31,7 +33,8 @@ List<int> _otherIndexes(
 equations.Matrix<double> _getMatrixA(
   List<List<double>> w, // Adjacency matrix (experts estimated)
   List<int> indexes, // Managed factor indexes
-) {
+) //
+{
   final matrix = _selection(
     w,
     indexes,
@@ -50,7 +53,8 @@ equations.Matrix<double> _getMatrixA(
 equations.Matrix<double> _getMatrixB(
   List<List<double>> w, // Adjacency matrix (experts estimated)
   List<int> indexes, // Manage factor indexes
-) {
+) //
+{
   return _selection(
     w,
     indexes,
@@ -64,8 +68,9 @@ List<List<double>> dynamicsOfControlledFactors({
   required List<double> rawVectorS,
   required List<List<double>> rawVectorU,
   int periodCount = 1,
-  double eps = 0, // error
-}) {
+  double eps = 0,
+}) //
+{
   for (var u in rawVectorU) {
     if (u.length != periodCount) {
       throw Exception("Period count and U matrix must be the same length.");
@@ -112,10 +117,6 @@ List<List<double>> dynamicsOfControlledFactors({
       data: [transposedVectorU[t - 1]],
     ).transpose();
 
-    // print('matrixA - $matrixA');
-    // print('matrixB - $matrixB');
-    // print('currentVectorS - $currentVectorS');
-    // print('currentVectorU - $currentVectorU');
     final multipliedAbyS = matrixA * currentVectorS;
     final multipliedBbyU = matrixB * currentVectorU;
     final nextS = (multipliedAbyS + multipliedBbyU).toList();

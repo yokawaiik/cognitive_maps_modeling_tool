@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,6 @@ class StartController extends GetxController {
     await Get.toNamed(EditFactorsPage.routeName);
   }
 
-  // todo: loadFile
   void loadFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -54,9 +52,5 @@ class StartController extends GetxController {
         Get.snackbar('Error', 'Something went wrong.');
       }
     }
-  }
-
-  void _goToHome() async {
-    await Get.offAndToNamed(HomePage.routeName);
   }
 }

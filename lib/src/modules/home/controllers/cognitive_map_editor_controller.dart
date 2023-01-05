@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
@@ -8,21 +7,17 @@ import 'package:get/get.dart';
 import 'package:mdmwcm_app/src/models/file_map_model.dart';
 import 'package:mdmwcm_app/src/models/home_page_arguments.dart';
 import 'package:pluto_grid/pluto_grid.dart';
-
 import '../../../utils/pluto_row_list_to_list.dart';
-
 import 'package:uuid/uuid.dart';
 
 class CognitiveMapEditorController extends GetxController {
   PlutoGridStateManager? stateManager;
-
   PlutoGridSelectingMode gridSelectingMode = PlutoGridSelectingMode.row;
-
   final columns = RxList<PlutoColumn>([]);
-
   final rows = RxList<PlutoRow>([]);
-
   late Rx<FileMapModel> fileMapModel;
+  int addCount = 1;
+  TextEditingController textFieldAddFactorController = TextEditingController();
 
   @override
   void onInit() {
@@ -55,11 +50,6 @@ class CognitiveMapEditorController extends GetxController {
 
     stateManager?.notifyListeners();
   }
-
-  // todo: editFactors
-  // void editFactors() {
-
-  // }
 
   void saveToFile() async {
     try {
@@ -119,8 +109,6 @@ class CognitiveMapEditorController extends GetxController {
     gridSelectingMode = mode;
     stateManager?.setSelectingMode(mode);
   }
-
-  int addCount = 1;
 
   void handlerAddRows(String title) {
     final newRow = stateManager!.getNewRow();
@@ -207,7 +195,6 @@ class CognitiveMapEditorController extends GetxController {
     ));
   }
 
-  TextEditingController textFieldAddFactorController = TextEditingController();
   void handlerAddColumnAndRow() {
     if (textFieldAddFactorController.text.isEmpty ||
         textFieldAddFactorController.text == '') {
@@ -234,7 +221,6 @@ class CognitiveMapEditorController extends GetxController {
     Get.back(closeOverlays: true);
   }
 
-  // todo: handleSaveAll
   void handleSaveAll() {
     saveToFile();
   }
@@ -257,9 +243,7 @@ class CognitiveMapEditorController extends GetxController {
     stateManager!.removeRows(stateManager!.currentSelectingRows);
   }
 
-  void createCognitiveMap({
-    isNew = true,
-  }) {
+  void createCognitiveMap({isNew = true}) {
     List<PlutoColumn> newColumns = [];
 
     final factorsSytemColumn = _generateSytemColumn(

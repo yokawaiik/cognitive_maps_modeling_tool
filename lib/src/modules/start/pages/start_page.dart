@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:mdmwcm_app/src/modules/start/controllers/start_controller.dart';
 
@@ -27,25 +26,25 @@ class StartPage extends GetView<StartController> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                 ),
                 onPressed: controller.setFactors,
-                child: Text(
+                child: const Text(
                   'Create a new map',
                   style: TextStyle(fontSize: 24),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 50,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   backgroundColor: colorScheme.secondary,
                   foregroundColor: colorScheme.onSecondary,
                 ),
                 onPressed: controller.loadFile,
-                child: Text(
+                child: const Text(
                   'Load file',
                   style: TextStyle(fontSize: 24),
                 ),
