@@ -1,0 +1,31 @@
+@startuml "FW1_1 - Динамика системы одной карты"
+
+
+skinparam UsecaseFontSize 20
+skinparam activityArrowFontSize 20
+skinparam PackageFontSize 20
+skinparam PackageStereotypeFontSize 20
+skinparam DefaultFontSize 20
+
+
+actor "Пользователь" as User
+
+
+usecase "Выбрать \n управляющие \n факторы" as FW1_1_1
+usecase "Установить \n количество \n периодов" as FW1_1_2
+usecase "Внести \n данные \n для вектора S" as FW1_1_3
+usecase "Внести данные \n для вектора U" as FW1_1_4
+usecase "Осуществить \n расчет" as FW1_1_5
+usecase "Построить \n диаграмму" as FW1_1_5_1
+
+
+User -up-> FW1_1_1
+FW1_1_1 -right-> FW1_1_2
+FW1_1_2 -right-> FW1_1_3
+FW1_1_3 -right-> FW1_1_4
+FW1_1_4 -down-> FW1_1_5
+FW1_1_5 <.right.. FW1_1_5_1 : extends
+
+
+
+@enduml

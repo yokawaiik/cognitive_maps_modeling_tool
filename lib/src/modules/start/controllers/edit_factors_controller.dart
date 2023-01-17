@@ -129,7 +129,7 @@ Factors can't be duplicated.
       fileMapModel: FileMapModel.onlyEditor(
         name: mapNameTFC.text,
         factorList: handledFactors,
-        matrixW: [],
+        matrixW: <List<double>>[],
       ),
     );
 

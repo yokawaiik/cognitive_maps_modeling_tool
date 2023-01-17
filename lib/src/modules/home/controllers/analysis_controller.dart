@@ -82,7 +82,10 @@ class AnalysisController extends GetxController {
       final zeroColumn = PlutoColumn(
         title: "S(0)",
         field: "s_0",
-        type: PlutoColumnType.number(),
+        type: PlutoColumnType.number(
+          allowFirstDot: true,
+          format: '#,###.##',
+        ),
         enableSorting: false,
         enableFilterMenuItem: false,
         enableEditingMode: true,
@@ -135,25 +138,16 @@ class AnalysisController extends GetxController {
           .map((e) => e.cells.values.first.value as String)
           .toList();
 
-      // final zeroColumn = PlutoColumn(
-      //   title: "S(0)",
-      //   field: "s_0",
-      //   type: PlutoColumnType.number(),
-      //   enableSorting: false,
-      //   enableFilterMenuItem: false,
-      //   enableEditingMode: true,
-      //   enableColumnDrag: false,
-      //   enableRowDrag: false,
-      //   readOnly: false,
-      // );
-
       vectorUstateManager!.refColumns.add(factorTitleColumn);
 
       for (var i = 0; i < periods.value; i++) {
         final newColumn = PlutoColumn(
           title: "$i",
           field: "t_$i",
-          type: PlutoColumnType.number(),
+          type: PlutoColumnType.number(
+            allowFirstDot: true,
+            format: '#,###.##',
+          ),
           enableSorting: false,
           enableFilterMenuItem: false,
           enableEditingMode: true,
@@ -218,12 +212,45 @@ class AnalysisController extends GetxController {
 
   // todo: loadedFromFile
   void matrixWUpdate({loadedFromFile = false}) {
-    var matrixWcolumns = (CMEC.stateManager?.columns) ?? [];
-    var matrixWrows = CMEC.stateManager?.rows ?? [];
+    List<PlutoColumn> matrixWcolumns = [];
 
-    for (var element in matrixWcolumns) {
-      element.readOnly = true;
+    for (var i = 0; i < CMEC.stateManager!.columns.length; i++) {
+      final newColumn = PlutoColumn(
+        // title: "$i",
+        // field: "t_$i",
+        title: CMEC.stateManager!.columns[i].title.toString(),
+        field: CMEC.stateManager!.columns[i].field,
+        // type: PlutoColumnType.number(),
+        type: CMEC.stateManager!.columns[i].type,
+        enableSorting: false,
+        enableFilterMenuItem: false,
+        enableEditingMode: false,
+        enableColumnDrag: false,
+        enableRowDrag: false,
+        readOnly: true,
+      );
+      matrixWcolumns.add(newColumn);
     }
+
+    List<PlutoRow> matrixWrows = [];
+
+    for (var element in CMEC.stateManager!.rows) {
+      // final newRow = CMEC.stateManager!.getNewRows(count: 1).first;
+
+      // newRow.cells.values.first.value = element;
+      // // matrixWrows.add(newRow);
+      // final newRow = CMEC.stateManager!.getNewRows(count: 1).first;
+
+      // newRow.cells.values.first.value = element;
+
+      matrixWrows.add(element);
+    }
+    // matrixWstateManager!
+    //     .insertRows(CMEC.stateManager!.rows.length, matrixWrows);
+
+    // for (var element in matrixWcolumns) {
+    //   element.readOnly = true;F
+    // }
 
     if (matrixWcolumns.isNotEmpty) {
       matrixWcolumns.first.enableRowChecked = true;

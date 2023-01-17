@@ -7,7 +7,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  pluto_grid: ^5.4.1
+  pluto_grid: ^5.4.9
   equations: ^4.1.0
   get: ^5.0.0-beta.52
   flutter_material_pickers: ^3.3.0

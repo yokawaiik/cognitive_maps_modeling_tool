@@ -137,7 +137,11 @@ class CognitiveMapEditorController extends GetxController {
     final newColumn = PlutoColumn(
       title: title,
       field: newColumnId,
-      type: PlutoColumnType.number(),
+      type: PlutoColumnType.number(
+        allowFirstDot: true,
+        format: '#,###.##',
+      ),
+      // type: PlutoColumnType.currency(format: '#,##', allowFirstDot: true),
       enableSorting: false,
       enableFilterMenuItem: false,
       enableEditingMode: true,
@@ -258,7 +262,10 @@ class CognitiveMapEditorController extends GetxController {
     for (var element in fileMapModel.value.factorList) {
       final factorColumn = _generateSytemColumn(
         element,
-        PlutoColumnType.number(defaultValue: 0),
+        PlutoColumnType.number(
+          allowFirstDot: true,
+          format: '#,###.##',
+        ),
       );
       newColumns.add(factorColumn);
     }
@@ -298,6 +305,7 @@ class CognitiveMapEditorController extends GetxController {
     PlutoColumnType plutoColumnType, {
     bool readOnly = false,
     PlutoColumnFrozen frozen = PlutoColumnFrozen.none,
+    String Function(dynamic)? formatter,
   }) {
     final newColumnId = const Uuid().v4();
 
@@ -312,7 +320,10 @@ class CognitiveMapEditorController extends GetxController {
       enableRowDrag: false,
       readOnly: readOnly,
       frozen: frozen,
+      formatter: formatter,
     );
+
+    // print('${newColumn.title} - newColumn.type : ${newColumn.type}');
 
     return newColumn;
   }
@@ -322,9 +333,16 @@ class CognitiveMapEditorController extends GetxController {
 
     newRow.cells.values.first.value = title;
 
+    // if (data != null) {
+    //   for (var i = 1; i < newRow.cells.values.length; i++) {
+    //     newRow.cells.values.elementAt(i).value = data[i - 1];
+    //   }
+    // }
+
     if (data != null) {
       for (var i = 1; i < newRow.cells.values.length; i++) {
         newRow.cells.values.elementAt(i).value = data[i - 1];
+        // newRow.cells.values.elementAt(i).value = PlutoCell(value: data[i - 1]);
       }
     }
 

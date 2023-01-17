@@ -1,0 +1,57 @@
+@startuml "Общая диаграмма"
+
+skinparam UsecaseFontSize 20
+skinparam activityArrowFontSize 20
+skinparam PackageFontSize 20
+skinparam PackageStereotypeFontSize 20
+skinparam DefaultFontSize 20
+
+
+actor "Пользователь" as User
+
+package "Функции приложения" {
+    usecase "Динамика \n системы \n одной \n карты" as FW1_1
+    usecase "Выбрать \n количество \n периодов" as FW1_1_1
+    usecase "Построить \n график" as FW1_1_2
+    usecase "Сложение \n карт" as FW1_2
+    usecase "Вычетание \n карт" as FW1_3
+    usecase "Умножение \n карт" as FW1_4
+    usecase "Удаление \n строки \n и столбца" as FW1_5
+    usecase "Навигация по \n приложению" as FW1_6
+    usecase "Работа \n с функциями" as FW1
+}
+
+package "Функции работы с когнитивной картой" {
+    usecase "Внести \n данные" as CM1
+    usecase "Изменить \n размерность" as CM1_1
+    usecase "Очистить" as CM1_2
+    usecase "Сохранить \n карту" as CM1_3
+    usecase "Открыть \n карту" as CM1_4
+    usecase "Создать \n новую \n карту" as CM1_5
+    usecase "Изменить \n карту" as CM1_6
+    usecase "Вычислить \n собственные \n числа" as CM1_7
+}
+
+
+User -up-> FW1
+FW1_1_1 ..> FW1  : <<include>>
+FW1_1_2 ..> FW1  : <<include>>
+FW1_2 ..> FW1  : <<include>>
+FW1_3 ..> FW1  : <<include>>
+FW1_4 ..> FW1  : <<include>>
+FW1_5 ..> FW1   : <<include>>
+FW1_6 ..> FW1 : <<include>>
+FW1_1 ..> FW1  : <<include>>
+
+
+User -down-> CM1
+CM1 <.. CM1_1 : <<include>>
+CM1 <.. CM1_2 : <<include>>
+CM1 <.. CM1_3 : <<include>>
+CM1 <.. CM1_4 : <<include>>
+CM1 <.. CM1_5 : <<include>>
+CM1 <.. CM1_6 : <<include>>
+CM1 <.. CM1_7 : <<include>>
+
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml "CM1_1 - Изменить размерность"
+left to right direction
+
+actor "Пользователь" as User
+
+usecase "Удалить столбец" as CM1_1_1
+usecase "Добавить столбец" as CM1_1_2_1
+usecase "Ввод названия" as CM1_1_2_2
+usecase "Отменить действие" as CM1_1_2_3
+usecase "Подтвердить действие" as CM1_1_2_4
+
+User -> CM1_1_1
+User -> CM1_1_2_1
+CM1_1_2_1 <.. CM1_1_2_2 : extends
+CM1_1_2_1 <.. CM1_1_2_3 : extends
+CM1_1_2_1 <.. CM1_1_2_4 : extends
+
+@enduml
