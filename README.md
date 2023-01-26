@@ -34,34 +34,42 @@ Cognitive modeling based on cognitive maps makes it possible to use incomplete, 
 ## App demonstration
 
 ![Start](./docs/screenshots/start.png)
+\
 Img - Start
 \
 \
 ![Set factors](./docs/screenshots/set_factors.png)
+\
 Img - Set factors (create new map)
 \
 \
 ![Cognitive map edit](./docs/screenshots/cm_edit.png)
+\
 Img - Cognitive map edit
 \
 \
 ![Cognitive map choose dependent factors](./docs/screenshots/cm_choose_dependent_factors.png)
+\
 Img - Cognitive map choose dependent factors
 \
 \
 ![Cognitive map set controlled factors](./docs/screenshots/cm_set_controlled_factors.png)
+\
 Img - Cognitive map set controlled factors
 \
 \
 ![Cognitive map choose time](./docs/screenshots/cm_choose_time.png)
+\
 Img - Cognitive map choose time
 \
 \
 ![Cognitive map set S(0)](./docs/screenshots/cm_set_s(0).png)
+\
 Img - Cognitive map set S(0)
 \
 \
 ![Cognitive map chart](./docs/screenshots/cm_chart.png)
+\
 Img - analysis chart
 
 
