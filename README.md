@@ -2,6 +2,20 @@
 
 This is a small MVP project to develop a tool for modeling cognitive maps, which is implemented as a desktop application.
 
+## Content table
+
+- [modeling data management with cognitive maps (mdmwcm\_app)](#modeling-data-management-with-cognitive-maps-mdmwcm_app)
+  - [Content table](#content-table)
+  - [Domain Information](#domain-information)
+  - [Used stack](#used-stack)
+  - [Features](#features)
+    - [Were realized](#were-realized)
+    - [Ways of improving](#ways-of-improving)
+  - [App demonstration](#app-demonstration)
+  - [Author contacts](#author-contacts)
+  - [License](#license)
+
+
 ## Domain Information
 
 Cognitive modeling based on cognitive maps makes it possible to use incomplete, fuzzy and even contradictory information from subject matter experts on a complex object of study to control it. Cognitive maps are used to determine the most significant and significant relationships, identify factors that significantly affect the problem under study, as well as signs of a control action of the required size, shape and sign of application in order to obtain the desired results.
@@ -14,7 +28,7 @@ Cognitive modeling based on cognitive maps makes it possible to use incomplete, 
 - Others package for UI and utils: flutter_material_pickers, file_saver, file_picker, equations, e.t.c. 
 
 ## Features
-### 
+### Were realized
 - [x] create new cognitive map;
 - [x] edit cognitive map's weights in matrix form;
 - [x] add/delete factors;
@@ -24,7 +38,7 @@ Cognitive modeling based on cognitive maps makes it possible to use incomplete, 
 - [x] analysis of dynamics cognitive map;
 - [x] show chart. 
 
-## Ways of improving
+### Ways of improving
 
 - [ ] subtract/sum cognitive maps;
 - [ ] edit cognitive map's weights in graph form;
