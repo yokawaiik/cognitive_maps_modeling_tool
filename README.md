@@ -1,10 +1,10 @@
-# modeling data management with cognitive maps (mdmwcm_app)
+# Cognitive maps modeling tool
 
 This is a small MVP project to develop a tool for modeling cognitive maps, which is implemented as a desktop application.
 
 ## Content table
 
-- [modeling data management with cognitive maps (mdmwcm\_app)](#modeling-data-management-with-cognitive-maps-mdmwcm_app)
+- [Cognitive maps modeling tool](#cognitive-maps-modeling-tool)
   - [Content table](#content-table)
   - [Domain Information](#domain-information)
   - [Used stack](#used-stack)
